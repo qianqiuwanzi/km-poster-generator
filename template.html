@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  /* ============================================================
+     RESET & BASE
+     ============================================================ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    display: flex; justify-content: center;
+    background: #E8E0D0; padding: 20px;
+    font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+  }
+
+  /* ============================================================
+     POSTER CONTAINER
+     ============================================================ */
+  .poster {
+    width: 1080px; min-height: 1440px;
+    background: #F5F0E6;
+    position: relative; overflow: visible;
+    border-radius: 12px;
+    box-shadow: 6px 6px 0 #2C2C2C;
+    border: 3px solid #2C2C2C;
+    background-image:
+      radial-gradient(ellipse 50% 35% at 10% 5%, rgba(230,210,170,.25) 0%, transparent 100%),
+      radial-gradient(ellipse 40% 30% at 90% 95%, rgba(220,200,150,.2) 0%, transparent 100%);
+  }
+
+  /* ============================================================
+     DECORATIVE: TAPE & STICKERS
+     ============================================================ */
+  .tape { position: absolute; height: 42px; opacity: 0.5; border-radius: 4px; z-index: 5; }
+  .tape-tl { top: 16px; left: 5%; width: 26%; background: linear-gradient(135deg, rgba(200,180,215,.5), rgba(180,160,195,.4)); transform: rotate(-1.2deg); }
+  .tape-tr { top: 20px; right: 6%; width: 18%; background: linear-gradient(135deg, rgba(215,195,155,.45), rgba(195,175,135,.35)); transform: rotate(1.8deg); }
+  .tape-ml { top: 380px; left: 2%; width: 12%; background: linear-gradient(135deg, rgba(200,180,215,.3), rgba(180,160,195,.2)); transform: rotate(2.5deg); }
+  .tape-bl { bottom: 50px; left: 10%; width: 20%; background: linear-gradient(135deg, rgba(215,195,155,.4), rgba(195,175,135,.3)); transform: rotate(-0.8deg); }
+  .tape-br { bottom: 240px; right: 3%; width: 14%; background: linear-gradient(135deg, rgba(200,180,215,.35), rgba(180,160,195,.25)); transform: rotate(1.2deg); }
+
+  .gsticker { position: absolute; font-size: 48px; opacity: 0.3; color: #2C2C2C; z-index: 5; }
+  .gs-1 { bottom: 160px; left: 16px; font-size: 40px; }
+  .gs-2 { top: 340px; right: 14px; font-size: 38px; }
+  .gs-3 { bottom: 260px; right: 18px; }
+  .gs-4 { top: 290px; left: 10px; font-size: 32px; }
+
+  /* ============================================================
+     SCROLL HEADER (卷轴标题)
+     ============================================================ */
+  .content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
+
+  .scroll-header { position: relative; display: flex; align-items: center; justify-content: center; padding: 12px 42px 6px; flex-shrink: 0; }
+  .scroll-body { position: relative; background: #FFF8E7; border: 3px solid #2C2C2C; border-radius: 6px; padding: 16px 56px 14px; text-align: center; box-shadow: 5px 5px 0 #2C2C2C; flex: 1; }
+  .scroll-roller { position: absolute; width: 36px; height: calc(100% + 16px); top: -8px; background: linear-gradient(135deg, #D4A574, #C49564, #B8874D, #D4A574); border: 3px solid #2C2C2C; border-radius: 18px; box-shadow: 3px 3px 0 #2C2C2C; }
+  .scroll-roller-l { left: 10px; } .scroll-roller-r { right: 10px; }
+  .scroll-roller::before, .scroll-roller::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; border-radius: 50%; background: #8B6914; border: 2.5px solid #2C2C2C; }
+  .scroll-roller::before { top: 10px; } .scroll-roller::after { bottom: 10px; }
+  .scroll-title { font-size: 72.0px; font-weight: 900; color: #2C2C2C; letter-spacing: 3px; line-height: 1.2; }
+  .scroll-title .highlight { background: linear-gradient(180deg, transparent 55%, #FFE066 55%); padding: 0 5px; }
+  .scroll-sub { font-size: 33.0px; color: #5A5A5A; margin-top: 5px; letter-spacing: 1px; }
+
+  /* ============================================================
+     TAGS AREA
+     ============================================================ */
+  .tags-area { display: flex; justify-content: center; gap: 10px; margin: 5px 0 5px; flex-wrap: wrap; flex-shrink: 0; }
+  .tag { font-size: 18px; font-weight: 700; padding: 6px 22px; border: 2.5px solid #2C2C2C; box-shadow: 3px 3px 0 #2C2C2C; color: #FFF; }
+  .tag:nth-child(1) { background: #E85A9C; } .tag:nth-child(2) { background: #FF9A5C; } .tag:nth-child(3) { background: #7DD87D; } .tag:nth-child(4) { background: #4A90D9; }
+
+  /* ============================================================
+     CHARACTER AREA & INTRO BUBBLE
+     ============================================================ */
+  .character-area { display: flex; align-items: center; gap: 18px; padding: 0 24px; margin-bottom: 8px; flex-shrink: 0; }
+  .character-wrap { flex-shrink: 0; width: 200px; height: 220px; position: relative; }
+
+  .intro-bubble { flex: 1; background: #FFF8E7; border: 3px solid #2C2C2C; border-radius: 18px; padding: 18px 22px; box-shadow: 4px 4px 0 #2C2C2C; position: relative; }
+  .intro-bubble::before { content: ''; position: absolute; left: -17px; top: 50%; transform: translateY(-50%); border: 9px solid transparent; border-right-color: #2C2C2C; border-left: 0; }
+  .intro-bubble::after { content: ''; position: absolute; left: -11px; top: 50%; transform: translateY(-50%); border: 7px solid transparent; border-right-color: #FFF8E7; border-left: 0; }
+  .intro-bubble p { font-size: 20px; color: #3A3A3A; line-height: 1.65; }
+  .intro-bubble strong { color: #E85A9C; font-weight: 700; }
+  .intro-bubble em { font-style: normal; background: #FFE066; padding: 0 4px; font-weight: 600; }
+
+  /* ============================================================
+     DIVIDER
+     ============================================================ */
+  .divider-row { display: flex; align-items: center; gap: 14px; padding: 0 36px; margin-bottom: 6px; flex-shrink: 0; }
+  .divider-row span { white-space: nowrap; font-size: 34px; font-weight: 800; color: #2C2C2C; letter-spacing: 6px; opacity: 0.2; }
+  .divider-line { flex: 1; height: 3px; background: repeating-linear-gradient(90deg, #2C2C2C 0px, #2C2C2C 10px, transparent 10px, transparent 20px); opacity: 0.2; }
+
+  /* ============================================================
+     2×2 BLOCKS GRID
+     ============================================================ */
+  .blocks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 20px; flex: 1; margin-bottom: 6px; }
+
+  .block { border: 3px solid #2C2C2C; border-radius: 28px; box-shadow: 5px 5px 0 #2C2C2C; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+  .b-energy { background: linear-gradient(135deg, #FFE066, #FFD93D); }
+  .b-productivity { background: linear-gradient(135deg, #FFB380, #FF9A5C); }
+  .b-cognition { background: linear-gradient(135deg, #A8E6A3, #7DD87D); }
+  .b-system { background: linear-gradient(135deg, #FFB8D9, #FF9ECD); }
+  .block::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: rgba(44,44,44,.04); }
+
+  .block-title-row { display: flex; align-items: center; gap: 10px; padding: 14px 18px 6px; position: relative; z-index: 2; }
+  .block-num { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #2C2C2C; color: #FFF; border-radius: 10px; font-size: 22px; font-weight: 800; box-shadow: 3px 3px 0 rgba(0,0,0,.2); flex-shrink: 0; }
+  .block-title { font-size: 29px; font-weight: 800; color: #2C2C2C; letter-spacing: 1px; }
+
+  .block-body { flex: 1; display: flex; padding: 2px 14px 6px; position: relative; z-index: 2; gap: 10px; }
+  .block-text { flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+
+  .block-items { list-style: none; }
+  .block-items li { font-size: 22px; color: #2C2C2C; font-weight: 600; line-height: 1.5; padding-left: 26px; position: relative; margin-bottom: 5px; }
+  .block-items li::before { content: '✦'; position: absolute; left: 0; top: 4px; color: #2C2C2C; font-size: 14px; opacity: 0.5; }
+
+  .visual-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; padding: 4px 0; }
+  .visual-label { font-size: 16px; font-weight: 700; color: #555; letter-spacing: 0.5px; white-space: nowrap; }
+  .bar-track { flex: 1; height: 28px; background: rgba(255,255,255,.4); border: 2.5px solid #2C2C2C; border-radius: 14px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 10px; }
+  .bar-val { font-size: 17px; font-weight: 800; color: #2C2C2C; min-width: 42px; text-align: right; }
+
+  .block-character { width: 130px; height: 150px; flex-shrink: 0; align-self: flex-end; position: relative; }
+
+  .block-highlight { display: inline-block; align-self: flex-start; margin: 2px 14px 12px; font-size: 19px; font-weight: 700; color: #2C2C2C; background: rgba(255,255,255,.5); border: 2.5px solid #2C2C2C; padding: 5px 18px; box-shadow: 3px 3px 0 #2C2C2C; position: relative; z-index: 2; }
+
+  .c-deco { position: absolute; font-size: 42px; opacity: 0.35; color: #2C2C2C; z-index: 1; }
+  .c-deco-1 { top: 2px; right: 4px; font-size: 48px; }
+  .c-deco-2 { bottom: 70px; left: 1px; font-size: 30px; }
+  .c-deco-3 { top: 64px; right: 1px; font-size: 34px; }
+  .c-deco-4 { bottom: 2px; left: 34%; font-size: 40px; }
+  .c-deco-5 { top: 38px; left: 44%; font-size: 28px; opacity: 0.12; }
+  .c-deco-6 { bottom: 44px; right: 44%; font-size: 28px; opacity: 0.12; }
+
+  .broken-line { height: 28px; margin: 5px 0; display: flex; align-items: center; gap: 8px; padding: 0; }
+  .dash-on { flex: 1; height: 4px; background: repeating-linear-gradient(90deg, #2C2C2C 0px, #2C2C2C 10px, transparent 10px, transparent 18px); opacity: 0.4; }
+  .dash-off { flex: 1; height: 4px; background: repeating-linear-gradient(90deg, rgba(44,44,44,.12) 0px, rgba(44,44,44,.12) 6px, transparent 6px, transparent 12px); }
+  .break-x { font-size: 24px; font-weight: 900; color: #2C2C2C; opacity: 0.3; flex-shrink: 0; }
+
+  .up-trend { height: 30px; margin: 4px 0; display: flex; align-items: flex-end; gap: 6px; padding: 0; }
+  .trend-dot { width: 18px; height: var(--h); background: #2C2C2C; border: 2.5px solid #2C2C2C; border-radius: 6px 6px 0 0; opacity: 0.35; }
+  .trend-dot.active { opacity: 0.85; background: #E85A9C; }
+
+  .learning-curve { display: flex; align-items: flex-end; gap: 5px; height: 40px; margin: 4px 0; padding: 0; }
+  .curve-bar { flex: 1; background: rgba(44,44,44,.55); border: 2.5px solid #2C2C2C; border-radius: 4px 4px 0 0; height: var(--h); }
+
+  .mini-stats { display: flex; gap: 7px; margin: 4px 0; }
+  .mini-stat { flex: 1; background: rgba(255,255,255,.5); border: 2.5px solid #2C2C2C; border-radius: 10px; padding: 6px 2px; text-align: center; box-shadow: 3px 3px 0 #2C2C2C; }
+  .mini-num { font-size: 30px; font-weight: 900; color: #2C2C2C; line-height: 1; }
+  .mini-lbl { font-size: 13px; color: #555; font-weight: 700; }
+
+  /* ============================================================
+     BOTTOM: SUMMARY BLOCK
+     ============================================================ */
+  .bottom-area { padding: 0 20px; margin-bottom: 8px; flex-shrink: 0; }
+  .summary-block { background: #2C2C2C; border: 3px solid #2C2C2C; border-radius: 18px; padding: 18px 24px; box-shadow: 5px 5px 0 #2C2C2C; display: flex; align-items: center; gap: 18px; }
+  .summary-icon { width: 64px; height: 64px; background: #FFF8E7; border: 3px solid #2C2C2C; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 38px; flex-shrink: 0; box-shadow: 4px 4px 0 rgba(0,0,0,.3); }
+  .summary-texts { flex: 1; }
+  .summary-label { font-size: 17px; font-weight: 700; color: rgba(255,255,255,.5); letter-spacing: 3.5px; margin-bottom: 3px; }
+  .summary-main { font-size: 30px; font-weight: 700; color: #FFF; line-height: 1.35; }
+  .summary-sub { font-size: 20px; color: rgba(255,255,255,.6); margin-top: 3px; }
+
+  /* ============================================================
+     BOTTOM: THREE ACTION CARDS
+     ============================================================ */
+  .action-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding: 0 20px; margin-bottom: 10px; flex-shrink: 0; }
+  .a-card { border: 3px solid #2C2C2C; border-radius: 20px; box-shadow: 5px 5px 0 #2C2C2C; position: relative; overflow: hidden; display: flex; flex-direction: column; padding: 12px 14px 10px; min-height: 170px; }
+  .a-card::before { content: ''; position: absolute; top: -28px; right: -28px; width: 100px; height: 100px; border-radius: 50%; opacity: 0.08; background: #2C2C2C; }
+  .a-c1 { background: linear-gradient(135deg, #E8F5FD, #D0EBF7); }
+  .a-c2 { background: linear-gradient(135deg, #FFF3E0, #FFE8C8); }
+  .a-c3 { background: linear-gradient(135deg, #F3E5F5, #E8D5ED); }
+  .a-card-title { font-size: 19px; font-weight: 800; color: #2C2C2C; margin-bottom: 4px; position: relative; z-index: 2; }
+  .a-card-body { display: flex; flex: 1; gap: 8px; position: relative; z-index: 2; }
+  .a-card-text { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .a-card-text .a-item { font-size: 17px; font-weight: 600; color: #2C2C2C; line-height: 1.5; padding-left: 20px; position: relative; }
+  .a-card-text .a-item::before { content: '✦'; position: absolute; left: 0; top: 3px; font-size: 11px; opacity: 0.5; }
+  .a-card-character { width: 82px; height: 92px; flex-shrink: 0; align-self: flex-end; }
+  .a-deco { position: absolute; font-size: 27px; opacity: 0.3; color: #2C2C2C; z-index: 1; }
+  .a-deco-1 { top: 3px; right: 4px; font-size: 34px; }
+  .a-deco-2 { bottom: 3px; left: 38%; font-size: 30px; }
+  .a-deco-3 { top: 38px; right: 2px; font-size: 22px; }
+  .a-card-highlight { font-size: 13px; font-weight: 700; color: #FFF; background: #2C2C2C; padding: 3px 14px; border: 2.5px solid #2C2C2C; display: inline-block; align-self: flex-start; margin-top: 4px; position: relative; z-index: 2; }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  .footer { display: flex; justify-content: space-between; align-items: center; padding: 0 24px; margin-bottom: 12px; flex-shrink: 0; }
+  .footer-brand { font-size: 16px; color: #888; font-weight: 600; }
+  .footer-dots { display: flex; gap: 6px; align-items: center; }
+  .footer-dot { width: 10px; height: 10px; border-radius: 50%; background: #CCC; border: 2.5px solid #2C2C2C; }
+  .footer-dot.active { background: #E85A9C; width: 14px; height: 14px; }
+
+  /* ============================================================
+     CHARACTER SLOTS — sizes for each context
+     ============================================================ */
+  .char-slot { display: flex; align-items: flex-end; justify-content: center; }
+  .char-slot img { width: 100%; height: 100%; object-fit: contain; object-position: bottom center; display: block; filter: drop-shadow(3px 9px 9px rgba(44,44,44,0.30)); }
+  .character-wrap { width: 235px; height: 255px; }
+  .block-character { width: 150px; height: 175px; }
+  .a-card-character { width: 95px; height: 108px; }
+
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="tape tape-tl"></div><div class="tape tape-tr"></div><div class="tape tape-ml"></div>
+  <div class="tape tape-bl"></div>
+  <span class="gsticker gs-1">♥</span><span class="gsticker gs-2">✦</span>
+  <span class="gsticker gs-3">◇</span><span class="gsticker gs-4">★</span>
+
+  <div class="content">
+
+    <div class="scroll-header">
+      <div class="scroll-roller scroll-roller-l"></div>
+      <div class="scroll-body">
+        <div class="scroll-title"><span class="highlight">{{title}}</span></div>
+        <div class="scroll-sub">{{subtitle}}</div>
+      </div>
+      <div class="scroll-roller scroll-roller-r"></div>
+    </div>
+
+    <div class="tags-area">
+  {{tags_html}}
+  </div>
+
+    <!-- ===== 主角色：皮克斯风长发女孩 ===== -->
+    <div class="character-area">
+      <div class="character-wrap">
+        <div class="char-slot" data-pose="hero" style="width:100%;height:100%"><img src="{{{char_hero}}}" alt=""></div>
+      </div>
+      <div class="intro-bubble">
+        <p>{{intro}}</p>
+      </div>
+    </div>
+
+    <div class="divider-row"><div class="divider-line"></div><span>✦ ✦ ✦</span><div class="divider-line"></div></div>
+
+    <!-- ========== 2x2 ========== -->
+    <div class="blocks-grid">
+
+      <!-- 卡1：聊了就忘（卡姿兰大眼睛+困惑） -->
+      <div class="block b-energy">
+        <span class="c-deco c-deco-1">⏳</span><span class="c-deco c-deco-2">✖︎</span>
+        <span class="c-deco c-deco-3">💭</span><span class="c-deco c-deco-4">⌛</span>
+        <span class="c-deco c-deco-5">💨</span><span class="c-deco c-deco-6">🌀</span>
+        <div class="block-title-row"><span class="block-num">1</span><span class="block-title">{{b1_title}}</span></div>
+        <div class="block-body">
+          <div class="block-text">
+            <ul class="block-items"><li>{{b1_item1}}</li><li>{{b1_item2}}</li></ul>
+            <div class="broken-line"><span class="dash-on"></span><span class="break-x">✕</span><span class="dash-off"></span></div>
+            <div class="visual-row"><span class="visual-label">{{b1_barlabel}}</span><div class="bar-track"><div class="bar-fill" style="width:{{b1_bar}}%;background:{{b1_barcolor}};"></div></div><span class="bar-val">{{b1_bar}}%</span></div>
+          </div>
+          <div class="block-character">
+            <div class="char-slot" data-pose="confused" style="width:100%;height:100%"><img src="{{{char_card1}}}" alt=""></div>
+          </div>
+        </div>
+        <div class="block-highlight">{{b1_highlight}}</div>
+      </div>
+
+      <!-- 卡2：能记住你了（开心比赞） -->
+      <div class="block b-productivity">
+        <span class="c-deco c-deco-1">★</span><span class="c-deco c-deco-2">✓</span>
+        <span class="c-deco c-deco-3">📚</span><span class="c-deco c-deco-4">✨</span>
+        <span class="c-deco c-deco-5">🔗</span><span class="c-deco c-deco-6">📝</span>
+        <div class="block-title-row"><span class="block-num">2</span><span class="block-title">{{b2_title}}</span></div>
+        <div class="block-body">
+          <div class="block-text">
+            <ul class="block-items"><li>{{b2_item1}}</li><li>{{b2_item2}}</li></ul>
+            <div class="up-trend"><div class="trend-dot" style="--h:6px;"></div><div class="trend-dot" style="--h:10px;"></div><div class="trend-dot" style="--h:16px;"></div><div class="trend-dot active" style="--h:28px;"></div></div>
+            <div class="visual-row"><span class="visual-label">{{b2_barlabel}}</span><div class="bar-track"><div class="bar-fill" style="width:{{b2_bar}}%;background:{{b2_barcolor}};"></div></div><span class="bar-val">{{b2_bar}}%</span></div>
+          </div>
+          <div class="block-character">
+            <div class="char-slot" data-pose="happy" style="width:100%;height:100%"><img src="{{{char_card2}}}" alt=""></div>
+          </div>
+        </div>
+        <div class="block-highlight">{{b2_highlight}}</div>
+      </div>
+
+      <!-- 卡3：同类坑不踩两次（思考灯泡） -->
+      <div class="block b-cognition">
+        <span class="c-deco c-deco-1">💡</span><span class="c-deco c-deco-2">⚙️</span>
+        <span class="c-deco c-deco-3">↗</span><span class="c-deco c-deco-4">📈</span>
+        <span class="c-deco c-deco-5">🧩</span><span class="c-deco c-deco-6">♻️</span>
+        <div class="block-title-row"><span class="block-num">3</span><span class="block-title">{{b3_title}}</span></div>
+        <div class="block-body">
+          <div class="block-text">
+            <ul class="block-items"><li>{{b3_item1}}</li><li>{{b3_item2}}</li></ul>
+            <div class="learning-curve"><div class="curve-bar" style="--h:6px;"></div><div class="curve-bar" style="--h:10px;"></div><div class="curve-bar" style="--h:16px;"></div><div class="curve-bar" style="--h:24px;"></div><div class="curve-bar" style="--h:36px;"></div></div>
+            <div class="visual-row"><span class="visual-label">{{b3_barlabel}}</span><div class="bar-track"><div class="bar-fill" style="width:{{b3_bar}}%;background:{{b3_barcolor}};"></div></div><span class="bar-val">{{b3_bar}}%</span></div>
+          </div>
+          <div class="block-character">
+            <div class="char-slot" data-pose="think" style="width:100%;height:100%"><img src="{{{char_card3}}}" alt=""></div>
+          </div>
+        </div>
+        <div class="block-highlight">{{b3_highlight}}</div>
+      </div>
+
+      <!-- 卡4：AI也能体检（挥手介绍） -->
+      <div class="block b-system">
+        <span class="c-deco c-deco-1">📊</span><span class="c-deco c-deco-2">♥</span>
+        <span class="c-deco c-deco-3">✓</span><span class="c-deco c-deco-4">🩺</span>
+        <span class="c-deco c-deco-5">📈</span><span class="c-deco c-deco-6">🏥</span>
+        <div class="block-title-row"><span class="block-num">4</span><span class="block-title">{{b4_title}}</span></div>
+        <div class="block-body">
+          <div class="block-text">
+            <div class="mini-stats">
+              <div class="mini-stat"><div class="mini-num">{{b4_m1}}</div><div class="mini-lbl">{{b4_m1l}}</div></div>
+              <div class="mini-stat"><div class="mini-num">{{b4_m2}}</div><div class="mini-lbl">{{b4_m2l}}</div></div>
+              <div class="mini-stat"><div class="mini-num">{{b4_m3}}</div><div class="mini-lbl">{{b4_m3l}}</div></div>
+            </div>
+            <ul class="block-items"><li>{{b4_item1}}</li><li>{{b4_item2}}</li></ul>
+            <div class="visual-row"><span class="visual-label">{{b4_barlabel}}</span><div class="bar-track"><div class="bar-fill" style="width:{{b4_bar}}%;background:{{b4_barcolor}};"></div></div><span class="bar-val">{{b4_bar}}%</span></div>
+          </div>
+          <div class="block-character">
+            <div class="char-slot" data-pose="wave" style="width:100%;height:100%"><img src="{{{char_card4}}}" alt=""></div>
+          </div>
+        </div>
+        <div class="block-highlight">{{b4_highlight}}</div>
+      </div>
+
+    </div>
+
+    <!-- ===== 底部 ===== -->
+    <div class="bottom-area">
+      <div class="summary-block">
+        <div class="summary-icon">🧠</div>
+        <div class="summary-texts">
+          <div class="summary-label">{{sum_label}}</div>
+          <div class="summary-main">{{sum_main}}</div>
+          <div class="summary-sub">{{sum_sub}}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 底部三张 ========== -->
+    <div class="action-row">
+
+      <!-- 如何开始 -->
+      <div class="a-card a-c1">
+        <span class="a-deco a-deco-1">🚀</span><span class="a-deco a-deco-2">⭐</span><span class="a-deco a-deco-3">⚡</span>
+        <div class="a-card-title">{{a1_title}}</div>
+        <div class="a-card-body">
+          <div class="a-card-text">
+            <div class="a-item">{{a1_item1}}</div>
+            <div class="a-item">{{a1_item2}}</div>
+            <div class="a-card-highlight">{{a1_highlight}}</div>
+          </div>
+          <div class="a-card-character">
+            <div class="char-slot" data-pose="hero" style="width:100%;height:100%"><img src="{{{char_hero}}}" alt=""></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 适用场景 -->
+      <div class="a-card a-c2">
+        <span class="a-deco a-deco-1">💼</span><span class="a-deco a-deco-2">💬</span><span class="a-deco a-deco-3">✨</span>
+        <div class="a-card-title">{{a2_title}}</div>
+        <div class="a-card-body">
+          <div class="a-card-text">
+            <div class="a-item">{{a2_item1}}</div>
+            <div class="a-item">{{a2_item2}}</div>
+            <div class="a-card-highlight">{{a2_highlight}}</div>
+          </div>
+          <div class="a-card-character">
+            <div class="char-slot" data-pose="think" style="width:100%;height:100%"><img src="{{{char_card3}}}" alt=""></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 学习成本 -->
+      <div class="a-card a-c3">
+        <span class="a-deco a-deco-1">📖</span><span class="a-deco a-deco-2">🧘</span><span class="a-deco a-deco-3">⏱</span>
+        <div class="a-card-title">{{a3_title}}</div>
+        <div class="a-card-body">
+          <div class="a-card-text">
+            <div class="a-item">{{a3_item1}}</div>
+            <div class="a-item">{{a3_item2}}</div>
+            <div class="a-card-highlight">{{a3_highlight}}</div>
+          </div>
+          <div class="a-card-character">
+            <div class="char-slot" data-pose="happy" style="width:100%;height:100%"><img src="{{{char_card2}}}" alt=""></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer">
+      <span class="footer-brand">{{footer}}</span>
+      <div class="footer-dots">
+        <span class="footer-dot active"></span><span class="footer-dot"></span>
+        <span class="footer-dot"></span><span class="footer-dot"></span><span class="footer-dot"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

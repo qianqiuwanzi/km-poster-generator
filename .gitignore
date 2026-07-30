@@ -1,0 +1,18 @@
+# Generated output
+output/
+
+# Temp build artifacts
+_build/
+poster_build.html
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Raw character images (keep transparent cutouts only)
+assets/characters/主图.png
+assets/characters/卡1.png
+assets/characters/卡2.png
+assets/characters/卡3.png
+assets/characters/卡4.png
