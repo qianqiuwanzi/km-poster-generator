@@ -1,100 +1,102 @@
 # km-poster-generator
 
-阿甜米色手帐风 · 知识图海报生成器。数据驱动，只改一份 JSON 即可复现同款 3:4 小红书种草长图——固定布局、固定人物 IP、固定装饰。
+> [English](README.md) · [中文](README_zh.md)
+
+Atian beige journal style · knowledge-graph poster generator. Data-driven: edit one JSON to reproduce the same 3:4 Xiaohongshu promo long image — fixed layout, fixed character IP, fixed decorations.
 
 ![preview](assets/preview.jpg)
 
-## 效果
+## Effect
 
-输出约 1080×1440（3:4）PNG，固定包含：
+Outputs a ~1080×1440 (3:4) PNG, fixed to include:
 
-- 顶部大标题 + 英文风副标题 + 标签气泡
-- 卡通女孩 IP 角色 × 5（同一角色不同姿势，3D 皮克斯风格）
-- 2×2 色块分类卡片（进度条 + 高亮词）
-- 底部黑色「核心收获」总结区
-- 底部三张行动卡
-- 手帐风装饰：胶带、贴纸、分割线、阴影
+- Top big title + English-style subtitle + tag bubbles
+- Cartoon girl IP character × 5 (same character, different poses, 3D Pixar style)
+- 2×2 color-block category cards (progress bar + highlight words)
+- Bottom black "Key Takeaways" summary area
+- Bottom three action cards
+- Journal-style decorations: tape, stickers, dividers, shadows
 
-## 快速开始
+## Quick Start
 
 ```bash
-# 克隆
+# Clone
 git clone https://github.com/qianqiuwanzi/km-poster-generator.git
 cd km-poster-generator
 
-# 安装依赖
+# Install deps
 pip install playwright
 playwright install chromium
 
-# 修改内容
-# 编辑 content.json（字段说明见下方）
+# Edit content
+# Edit content.json (field reference below)
 
-# 生成海报
+# Generate poster
 python generate.py
 
-# 产物在 output/poster.png
+# Output at output/poster.png
 ```
 
-## content.json 字段说明
+## content.json Field Reference
 
-| 字段 | 说明 | 示例 |
+| Field | Description | Example |
 |------|------|------|
-| `title` | 顶部大标题 | `"给AI装上长期记忆"` |
-| `subtitle` | 副标题（支持 emoji） | `"智商藏不住 — 让AI不再7秒就忘"` |
-| `tags` | 4 个标签（emoji + 词） | `["🧠 AI记忆系统", "⚡ 认知架构"]` |
-| `intro` | 引言气泡（支持 `<strong>` `<em>` `<br>`） | `"<strong>普通AI</strong> 只有短时记忆..."` |
-| `b1`~`b4` | 四个色块卡片 | 见下方子字段 |
-| `sum` | 底部核心收获黑区 | `{label, main, sub}` |
-| `a1`~`a3` | 底部三张行动卡 | `{title, item1, item2, highlight}` |
-| `footer` | 页脚文字 | `"🧠 知识图 · 大卫自媒体"` |
+| `title` | Top big title | `"Give AI long-term memory"` |
+| `subtitle` | Subtitle (emoji supported) | `"IQ can't hide — make AI stop forgetting in 7 seconds"` |
+| `tags` | 4 tags (emoji + word) | `["🧠 AI memory system", "⚡ cognitive architecture"]` |
+| `intro` | Intro bubble (`<strong>` `<em>` `<br>` supported) | `"<strong>Ordinary AI</strong> only has short-term memory..."` |
+| `b1`~`b4` | Four color-block cards | See sub-fields below |
+| `sum` | Bottom key-takeaways black area | `{label, main, sub}` |
+| `a1`~`a3` | Bottom three action cards | `{title, item1, item2, highlight}` |
+| `footer` | Footer text | `"🧠 Knowledge graph · David Media"` |
 
-### 色块卡片子字段（b1~b4）
+### Color-block card sub-fields (b1~b4)
 
-| 子字段 | 说明 |
+| Sub-field | Description |
 |--------|------|
-| `title` | 卡片标题（emoji + 中文） |
-| `item1` / `item2` | 两行说明文字 |
-| `barlabel` | 进度条标签 |
-| `bar` | 进度值 0~100 |
-| `barcolor` | 进度条颜色（`#2C2C2C` 深色 / `#E85A9C` 粉色交替） |
-| `highlight` | 高亮金句 |
-| `b4` 独有 | `m1/m1l` `m2/m2l` `m3/m3l`（三项指标：数值 + 标签） |
+| `title` | Card title (emoji + text) |
+| `item1` / `item2` | Two lines of description |
+| `barlabel` | Progress bar label |
+| `bar` | Progress value 0~100 |
+| `barcolor` | Progress bar color (`#2C2C2C` dark / `#E85A9C` pink alternating) |
+| `highlight` | Highlight quote |
+| `b4` only | `m1/m1l` `m2/m2l` `m3/m3l` (three metrics: value + label) |
 
-**注意**：只改 JSON 的**值**，不要改键名和结构。
+**Note**: only change the **values** in the JSON, not the keys or structure.
 
-## 渲染说明
+## Rendering Notes
 
-`generate.py` 内嵌自适应渲染流水线：
+`generate.py` embeds an adaptive render pipeline:
 
-1. Playwright 打开填充后的 HTML
-2. 按比例压缩子元素 margin/padding/gap，使内容高 ≈ 1400px（保持字号不变）
-3. 在 2×2 色块 / 核心收获 / 底部三卡之间显式留 20px 缝隙
-4. 视口高度跟随海报真实右下角位置（防止底部被裁）
-5. 精确 `bounding_box` clip（含阴影余量），零裁切
+1. Playwright opens the filled HTML
+2. Compress child element margin / padding / gap proportionally so content height ≈ 1400px (font size unchanged)
+3. Explicit 20px gaps between 2×2 color blocks / key takeaways / bottom three cards
+4. Viewport height follows the poster's real bottom-right position (prevents bottom crop)
+5. Precise `bounding_box` clip (with shadow margin), zero cropping
 
-## 目录结构
+## Directory Structure
 
 ```
 km-poster-generator/
-├── SKILL.md              # 技能流程定义 + 字段参考
-├── README.md             # 本文件
-├── content.json          # 示例文案（智商藏不住）
-├── content.schema.json   # JSON Schema 验证
-├── generate.py           # 生成器（填文案 + 渲染）
-├── template.html         # 占位符模板（54 个 {{...}}）
+├── SKILL.md              # Skill flow definition + field reference
+├── README.md             # This file
+├── content.json          # Example copy (IQ can't hide)
+├── content.schema.json   # JSON Schema validation
+├── generate.py           # Generator (fill copy + render)
+├── template.html         # Placeholder template (54 {{...}})
 ├── assets/
-│   └── characters/       # 5 张透明抠图角色（_rb.png）
-├── tests/                # 基础渲染 + Schema 测试
-└── tools/                # 调试脚本
+│   └── characters/       # 5 transparent cutout characters (_rb.png)
+├── tests/                # Basic render + Schema tests
+└── tools/                # Debug scripts
 ```
 
-## 调试工具
+## Debug Tools
 
 ```bash
-# 诊断渲染高度问题
+# Diagnose render height issues
 python tools/debug_height.py
 
-# 诊断各区块是否正常
+# Diagnose each section
 python tools/debug_sections.py
 ```
 
