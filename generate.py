@@ -14,7 +14,7 @@ INITIAL_WAIT_MS = 1500         # 页面加载后初始等待（ms）
 VIEWPORT_PAD = 14              # 视口额外余量（px）
 CLIP_PAD = 12                  # 截图裁剪余量（容纳 box-shadow 6px + 余量）
 GAP_MARGIN_BOTTOM = 20         # blocks-grid 底部缝隙（px）
-GAP_MARGIN_TOP = 18            # bottom-area / action-row 顶部缝隙（px）
+GAP_MARGIN_TOP = 18            # bottom-area 顶部缝隙（px）
 GAP_MARGIN_BOTTOM_AREA = 20    # bottom-area 底部缝隙（px）
 SCALE_FACTOR = 2               # Playwright device_scale_factor
 DEFAULT_VIEWPORT_WIDTH = 1120
@@ -63,15 +63,6 @@ PLACEHOLDER_MAP = {
     # 核心收获
     "sum_label":     ("sum", "label"),     "sum_main":    ("sum", "main"),
     "sum_sub":       ("sum", "sub"),
-    # 行动卡 a1
-    "a1_title":      ("a1", "title"),      "a1_item1":   ("a1", "item1"),
-    "a1_item2":      ("a1", "item2"),      "a1_highlight": ("a1", "highlight"),
-    # 行动卡 a2
-    "a2_title":      ("a2", "title"),      "a2_item1":   ("a2", "item1"),
-    "a2_item2":      ("a2", "item2"),      "a2_highlight": ("a2", "highlight"),
-    # 行动卡 a3
-    "a3_title":      ("a3", "title"),      "a3_item1":   ("a3", "item1"),
-    "a3_item2":      ("a3", "item2"),      "a3_highlight": ("a3", "highlight"),
     # 页脚
     "footer":        ("footer",),
 }
@@ -181,13 +172,12 @@ def render(html_path, out_path):
 
             print(f"after compress: factor={factor:.3f}, height={H:.0f}  (iterations={iteration})")
 
-            # 三者之间保留可见缝隙（覆盖压缩造成的贴紧）
+            # 保留可见缝隙（覆盖压缩造成的贴紧）
             pg.evaluate("""(function(){
               document.querySelector('.blocks-grid').style.marginBottom='%dpx';
               document.querySelector('.bottom-area').style.marginTop='%dpx';
               document.querySelector('.bottom-area').style.marginBottom='%dpx';
-              document.querySelector('.action-row').style.marginTop='%dpx';
-            })()""" % (GAP_MARGIN_BOTTOM, GAP_MARGIN_TOP, GAP_MARGIN_BOTTOM_AREA, GAP_MARGIN_TOP))
+            })()""" % (GAP_MARGIN_BOTTOM, GAP_MARGIN_TOP, GAP_MARGIN_BOTTOM_AREA))
             pg.wait_for_timeout(COMPRESS_WAIT_MS)
             H = measure()
             print(f"after gap-set: height={H:.0f}")

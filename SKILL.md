@@ -20,7 +20,6 @@
      - `b4`：额外 `{m1, m1l, m2, m2l, m3, m3l}`（三项指标：值+标签）
      - `barcolor` 用 `#2C2C2C`（深）/ `#E85A9C`（粉）交替
    - `sum`：底部黑色核心收获区 `{label, main, sub}`
-   - `a1`~`a3`：底部三张行动卡 `{title, item1, item2, highlight}`
    - `footer`：页脚
    - `characters`（**可选**）：覆盖角色图路径 `{hero, card1, card2, card3, card4}`。不填则使用默认角色。
 2. 运行：

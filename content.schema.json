@@ -4,7 +4,7 @@
   "title": "KM Poster Content Schema",
   "description": "Schema for content.json — the data driver for km-poster-generator posters.",
   "type": "object",
-  "required": ["title", "subtitle", "tags", "intro", "b1", "b2", "b3", "b4", "sum", "a1", "a2", "a3", "footer"],
+  "required": ["title", "subtitle", "tags", "intro", "b1", "b2", "b3", "b4", "sum", "footer"],
   "properties": {
     "title": { "type": "string", "minLength": 1 },
     "subtitle": { "type": "string" },
@@ -28,9 +28,6 @@
         "sub": { "type": "string" }
       }
     },
-    "a1": { "$ref": "#/$defs/actionCard" },
-    "a2": { "$ref": "#/$defs/actionCard" },
-    "a3": { "$ref": "#/$defs/actionCard" },
     "footer": { "type": "string" },
     "characters": { "$ref": "#/$defs/characters" }
   },
@@ -64,16 +61,6 @@
         "barlabel": { "type": "string" },
         "bar": { "type": "number", "minimum": 0, "maximum": 100 },
         "barcolor": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "highlight": { "type": "string" }
-      }
-    },
-    "actionCard": {
-      "type": "object",
-      "required": ["title", "item1", "item2", "highlight"],
-      "properties": {
-        "title": { "type": "string" },
-        "item1": { "type": "string" },
-        "item2": { "type": "string" },
         "highlight": { "type": "string" }
       }
     },
